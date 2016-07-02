@@ -23,12 +23,13 @@ except ImportError:
         time.sleep(2)
         sys.exit(0)
 
+win=False
 #check for notification library.
 try:
     from gi.repository import Notify
 except:
     print "No 'libnotify' module found. You wont be getting Desktop Notifications.\n"
-
+    win=True
 
 #Func for desktop notifications. Not available on Windows.
 def notif(msg):
@@ -107,6 +108,9 @@ def downloadSong(songName,songURL):
     if not os.path.exists(songName):
         print "Downloading %s.. Please wait.." %songName
         fileName=songName
+        if win:
+            fileName=fileName.split('|')
+            fileName=fileName[len(fileName)-1]
         startTime=time.time()
         getsong=requests.get(songURL,stream=True)
         with open(fileName,'wb') as fs:
